@@ -1,15 +1,4 @@
-# init.lua
-My neovim config files and plugins
+# 💤 LazyVim
 
-https://www.lazyvim.org/
-https://github.com/hrsh7th/nvim-cmp
-https://github.com/octaltree/cmp-look?tab=readme-ov-file
-https://github.com/nvim-neorocks/rocks-treesitter.nvim 
-https://github.com/kmarius/jsregexp
-
-
-
-
-
-## Reference
-https://github.com/LunarVim/Neovim-from-scratch/blob/master/lua/user/cmp.lua
+A starter template for [LazyVim](https://github.com/LazyVim/LazyVim).
+Refer to the [documentation](https://lazyvim.github.io/installation) to get started.

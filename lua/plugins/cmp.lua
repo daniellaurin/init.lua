@@ -11,17 +11,14 @@ return {
     "hrsh7th/nvim-cmp",
     dependencies = {
       "hrsh7th/cmp-emoji",
-      "neovim/nvim-lspconfig", -- Collection of configurations for built-in LSP client
-      "hrsh7th/nvim-cmp", -- Autocompletion plugin
-      "hrsh7th/cmp-nvim-lsp", -- LSP source for nvim-cmp
-      "saadparwaiz1/cmp_luasnip", -- Snippets source for nvim-cmp
-      "L3MON4D3/LuaSnip", -- Snippets plugin
-      --LSP settings
+      "neovim/nvim-lspconfig",
+      "hrsh7th/cmp-nvim-lsp",
+      "saadparwaiz1/cmp_luasnip",
+      "L3MON4D3/LuaSnip",
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
-      -- "octaltree/cmp-look", -- Use the look command to use dictionary
+      "octaltree/cmp-look",
     },
-    ---@param opts cmp.ConfigSchema
     opts = function(_, opts)
       local has_words_before = function()
         unpack = unpack or table.unpack
@@ -29,53 +26,47 @@ return {
         return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
       end
 
-      -- luasnip setup
       local luasnip = require("luasnip")
-
-      -- nvim-cmp setup
       local cmp = require("cmp")
-      cmp.setup({
-        snippet = {
-          expand = function(args)
-            luasnip.lsp_expand(args.body)
-          end,
+
+      -- Initialize mapping if it doesn't exist
+      opts.mapping = opts.mapping or {}
+
+      -- Integrate 'look' source configuration here
+      opts.sources = opts.sources or {}
+      table.insert(opts.sources, {
+        name = "look",
+        keyword_length = 2,
+        option = {
+          convert_case = true,
+          loud = true,
         },
       })
 
-      -- Integrate 'look' source configuration here
-      opts.sources = {
-        {
-          name = "look",
-          keyword_length = 2,
-          option = {
-            convert_case = true,
-            loud = true,
-            --dict = '/usr/share/dict/words'
-          },
-        },
+      -- Add other sources if they don't already exist
+      local source_names = {}
+      for _, source in ipairs(opts.sources) do
+        source_names[source.name] = true
+      end
 
-        { name = "nvim_lsp" },
-        { name = "nvim_lua" },
-        { name = "luasnip" }, -- For luasnip users.
-        { name = "orgmode" },
-        { name = "buffer" },
-        { name = "path" },
-      }
+      for _, name in ipairs({ "nvim_lsp", "nvim_lua", "luasnip", "buffer", "path", "neorg" }) do
+        if not source_names[name] then
+          table.insert(opts.sources, { name = name })
+        end
+      end
 
       -- Add additional capabilities supported by nvim-cmp
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
-
       local lspconfig = require("lspconfig")
-
       -- Enable some language servers with the additional completion capabilities offered by nvim-cmp
-      local servers = { "clangd" } --you can add languages here
+      local servers = { "clangd" }
       for _, lsp in ipairs(servers) do
         lspconfig[lsp].setup({
-          -- on_attach = my_custom_on_attach,
           capabilities = capabilities,
         })
       end
 
+      -- Now safely extend the mapping
       opts.mapping = vim.tbl_extend("force", opts.mapping, {
         ["<Tab>"] = cmp.mapping(function(fallback)
           if cmp.visible() then

@@ -9,6 +9,7 @@ return {
   -- Setup supertab in cmp and integrate 'look' source
   {
     "hrsh7th/nvim-cmp",
+
     dependencies = {
       "hrsh7th/cmp-emoji",
       "neovim/nvim-lspconfig", -- Collection of configurations for built-in LSP client

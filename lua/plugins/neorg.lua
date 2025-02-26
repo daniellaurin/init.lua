@@ -37,6 +37,7 @@ return {
               autodir = true,
             },
           },
+          ["core.esupports.metagen"] = { config = { update_date = false } }, --do not update date until https://github.com/nvim-neorg/neorg/issues/1579
         },
       })
     end,

@@ -1,8 +1,5 @@
 return {
   "vhyrro/luarocks.nvim",
-  opts = {
-    luarocks_build_args = {
-      "--with-lua-include=/usr/include",
-    },
-  },
+  priority = 1000, -- Very high priority is required, luarocks.nvim should run as the first plugin in your config.
+  config = true,
 }
