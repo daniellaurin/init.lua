@@ -17,7 +17,7 @@ return {
       "L3MON4D3/LuaSnip",
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
-      "octaltree/cmp-look",
+      "f3fora/cmp-spell",
     },
     opts = function(_, opts)
       local has_words_before = function()
@@ -34,14 +34,28 @@ return {
 
       -- Integrate 'look' source configuration here
       opts.sources = opts.sources or {}
-      table.insert(opts.sources, {
-        name = "look",
-        keyword_length = 2,
-        option = {
-          convert_case = true,
-          loud = true,
+
+      local sources_to_add = {
+        {
+          name = "spell",
+          option = {
+            keep_all_entries = false,
+            enable_in_context = function()
+              return true
+            end,
+            preselect_correct_word = true,
+          },
         },
-      })
+        {
+          name = "dictionary",
+          keyword_length = 2,
+        },
+      }
+
+      -- Add existing sources
+      for _, source in ipairs(sources_to_add) do
+        table.insert(opts.sources, source)
+      end
 
       -- Add other sources if they don't already exist
       local source_names = {}
@@ -49,7 +63,7 @@ return {
         source_names[source.name] = true
       end
 
-      for _, name in ipairs({ "nvim_lsp", "nvim_lua", "luasnip", "buffer", "path", "neorg" }) do
+      for _, name in ipairs({ "spell", "nvim_lsp", "nvim_lua", "luasnip", "buffer", "path", "neorg" }) do
         if not source_names[name] then
           table.insert(opts.sources, { name = name })
         end
@@ -58,6 +72,7 @@ return {
       -- Add additional capabilities supported by nvim-cmp
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
       local lspconfig = require("lspconfig")
+
       -- Enable some language servers with the additional completion capabilities offered by nvim-cmp
       local servers = { "clangd" }
       for _, lsp in ipairs(servers) do
@@ -65,6 +80,10 @@ return {
           capabilities = capabilities,
         })
       end
+
+      -- Configure spellsuggest for cmp-spell
+      vim.opt.spell = true
+      vim.opt.spelllang = { "en_us" }
 
       -- Now safely extend the mapping
       opts.mapping = vim.tbl_extend("force", opts.mapping, {
