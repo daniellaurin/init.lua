@@ -1,11 +1,6 @@
 -- bootstrap lazy.nvim, LazyVim and your plugins
 require("config.lazy")
 
---cmp-lsp config
-require("mason-lspconfig").setup({
-  ensure_installed = { "clangd" },
-})
-
 --formatting of neovide
 vim.opt.guifont = "Fira Code Semibold:h12"
 vim.g.neovide_fullscreen = false

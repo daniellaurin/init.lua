@@ -1,31 +1,35 @@
 return {
   {
     "vhyrro/luarocks.nvim",
-    priority = 1000, -- We'd like this plugin to load first out of the rest
-    config = true, -- This automatically runs `require("luarocks-nvim").setup()`
+    priority = 1000,
+    config = true,
   },
   {
     "nvim-neorg/neorg",
-    dependencies = { "luarocks.nvim", "nvim-treesitter/nvim-treesitter" },
-    -- put any other flags you wanted to pass to lazy here!
-    lazy = false, -- Disable lazy loading as some `lazy.nvim` distributions set `lazy = true` by default
-    version = "*", -- Pin Neorg to the latest stable release
+    dependencies = {
+      "vhyrro/luarocks.nvim",
+      "nvim-treesitter/nvim-treesitter",
+      -- In 2026, adding the parsers as direct dependencies lets Lazy/Neovim
+      -- automatically load them into the runtimepath
+      "nvim-neorg/tree-sitter-norg",
+      "nvim-neorg/tree-sitter-norg-meta",
+    },
+    lazy = false,
+    version = false, -- <--- FIX: Forces Neorg to use the newest treesitter-compatible commits
     config = function()
       require("neorg").setup({
         load = {
-          ["core.summary"] = { -- Generates index pages
-            config = {
-              strategy = "default",
-            },
+          ["core.summary"] = {
+            config = { strategy = "default" },
           },
-          ["core.defaults"] = {}, -- Loads default behaviour
+          ["core.defaults"] = {},
           ["core.concealer"] = {
             config = {
               icon_preset = "diamond",
               folds = true,
             },
-          }, -- Adds pretty icons to your documents
-          ["core.dirman"] = { -- Manages Neorg workspaces
+          },
+          ["core.dirman"] = {
             config = {
               workspaces = {
                 work = "~/notes/work",
@@ -37,7 +41,7 @@ return {
               autodir = true,
             },
           },
-          ["core.esupports.metagen"] = { config = { update_date = false } }, --do not update date until https://github.com/nvim-neorg/neorg/issues/1579
+          ["core.esupports.metagen"] = { config = { update_date = false } },
         },
       })
     end,
