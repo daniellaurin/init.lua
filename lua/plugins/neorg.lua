@@ -15,7 +15,7 @@ return {
       "nvim-neorg/tree-sitter-norg-meta",
     },
     lazy = false,
-    version = false, -- <--- FIX: Forces Neorg to use the newest treesitter-compatible commits
+    version = false,
     config = function()
       require("neorg").setup({
         load = {
@@ -41,7 +41,13 @@ return {
               autodir = true,
             },
           },
-          ["core.esupports.metagen"] = { config = { update_date = false } },
+          ["core.esupports.metagen"] = {
+            config = {
+              type = "auto",
+              update_date = true,
+              author = "dlaurin",
+            },
+          },
         },
       })
     end,
